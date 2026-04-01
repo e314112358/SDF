@@ -12,5 +12,5 @@ module purge  #清空所有模块
 # module load vis
 
 echo "running"
-python density_xz.py
+python density_xy.py
 echo "Production finished."

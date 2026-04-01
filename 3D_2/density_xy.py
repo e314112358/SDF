@@ -17,9 +17,9 @@ OMEGA_L = 2 * np.pi * const.c / WAVELENGTH
 N_C = (const.epsilon_0 * const.m_e * OMEGA_L**2) / (const.e**2)
 
 SPECIES_MAP = {
-    'Electron': {'cmap': 'Blues',  'vrange': [0, 200]}, 
-    'Proton':   {'cmap': 'Reds',   'vrange': [0, 30]},  
-    'Carbon':   {'cmap': 'Greens', 'vrange': [0, 30]},  
+    'Electron': {'cmap': 'turbo',  'vrange': [0, 200]}, 
+    'Proton':   {'cmap': 'turbo',   'vrange': [0, 30]},  
+    'Carbon':   {'cmap': 'turbo', 'vrange': [0, 30]},  
 }
 
 # 【新增：视野裁切取景框】单位为微米 (um)
