@@ -3,7 +3,7 @@
 #SBATCH -N 1                  # 保持 1 个节点 (Node)
 #SBATCH -n 1                  # 保持 1 个任务 (Task)
 #SBATCH -c 8                  # 【关键修改 1】：为该任务申请 8 个 CPU 核心！
-#SBATCH -t 02:00:00           # 运行时间 2 小时
+#SBATCH -t 20:00:00           # 运行时间 2 小时
 #SBATCH --mem=32G             # 申请 32G 内存 (注意：如果运行时因内存不足被杀，请加到 64G)
 #SBATCH -o density_out.txt
 #SBATCH -e density_err.txt

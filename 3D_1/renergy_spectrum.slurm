@@ -2,8 +2,8 @@
 #SBATCH -J plot
 #SBATCH -N 1
 #SBATCH -n 1
-#SBATCH -t 20:00:00           
-#SBATCH --mem=16G              
+#SBATCH -t 02:00:00           # 视频编码较慢，建议多给点时间
+#SBATCH --mem=16G              # 内存多给一点，防止大数组崩溃
 #SBATCH -o spe_out.txt
 #SBATCH -e spe_err.txt
 
@@ -12,5 +12,5 @@ module purge  #清空所有模块
 # module load vis
 
 echo " Starting  at $(date)"
-python plot_energy_spectrum.py
+python Plot_Spectrum_RawParticles.py
 echo " Production finished at $(date)."

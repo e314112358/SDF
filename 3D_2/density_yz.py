@@ -20,7 +20,6 @@ N_C = (const.epsilon_0 * const.m_e * OMEGA_L**2) / (const.e**2)
 SPECIES_MAP = {
     'Electron': {'cmap': 'turbo',  'vrange': [0, 200]},
     'Proton':   {'cmap': 'turbo',   'vrange': [0, 30]},
-    'Carbon':   {'cmap': 'turbo', 'vrange': [0, 30]}, 
 }
 
 # ==========================================
@@ -141,9 +140,9 @@ def main():
         os.makedirs(f"Plots_Tilted_YZ_Density_{species}", exist_ok=True)
         
     sdf_files = sorted(glob.glob("*.sdf"))
-    print(f"🚀 [倾斜 YZ 平面] 开始 24核并行 处理 {len(sdf_files)} 个文件...")
+    print(f"🚀 [倾斜 YZ 平面] 开始 8核并行 处理 {len(sdf_files)} 个文件...")
 
-    NUM_PROCESSES = 24
+    NUM_PROCESSES = 8
     print(f"⚙️ 目标倾角: {THETA_DEG} 度 | 切片深度 (X'): {SLICE_DEPTH_UM} um")
 
     with Pool(processes=NUM_PROCESSES) as pool:

@@ -2,8 +2,8 @@
 #SBATCH -J plot            # 任务名改得更有辨识度一点
 #SBATCH -N 1                  # 保持 1 个节点 (Node)
 #SBATCH -n 1                  # 保持 1 个任务 (Task)
-#SBATCH -c 24                  # 【关键修改 1】：为该任务申请 8 个 CPU 核心！
-#SBATCH -t 06:00:00           # 运行时间 6 小时
+#SBATCH -c 8                  # 【关键修改 1】：为该任务申请 24 个 CPU 核心！
+#SBATCH -t 20:00:00           # 运行时间 20 小时
 #SBATCH --mem=32G             # 申请 32G 内存 (注意：如果运行时因内存不足被杀，请加到 64G)
 #SBATCH -o density_out.txt
 #SBATCH -e density_err.txt
@@ -22,7 +22,7 @@ export NUMEXPR_NUM_THREADS=1
 
 echo "🚀 Starting 24-core parallel plotting at $(date)"
 
-# 运行你的 8 核并行 Python 脚本
+# 运行你的 24 核并行 Python 脚本
 python density_yz.py
 
 echo "🎉 Production finished at $(date)."
