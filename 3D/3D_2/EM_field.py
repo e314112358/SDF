@@ -1,5 +1,5 @@
 import matplotlib
-matplotlib.use('Agg') # 【关键防护】强制使用无头模式，防止多进程画图崩溃
+matplotlib.use('Agg') # 习惯性加入无头模式，防止批量画图报错
 
 import sdf_helper as sh
 import matplotlib.pyplot as plt
@@ -7,10 +7,9 @@ import scipy.constants as const
 import numpy as np
 import glob
 import os
-from multiprocessing import Pool
 
 # ==========================================
-# 1. 物理参数与环境配置 (所有进程共享)
+# 1. 物理参数与环境配置
 # ==========================================
 I_0_W_cm2 = 1.5e21  # 激光强度
 I_0_W_m2 = I_0_W_cm2 * 1e4
@@ -18,7 +17,7 @@ E_0 = np.sqrt(2 * I_0_W_m2 / (const.c * const.epsilon_0))
 B_0 = E_0 / const.c
 
 # 定义你想画的分量：['Ex', 'Ey', 'Ez', 'Bx', 'By', 'Bz']
-COMPONENTS_TO_PLOT = ['Ex', 'Ey', 'Bz'] 
+COMPONENTS_TO_PLOT = [ 'Ey', 'Bz'] 
 
 # ==========================================
 # 2. 核心绘图函数
@@ -59,7 +58,7 @@ def plot_field_component(data, component_name, base_name, time_fs):
         save_path = os.path.join(output_dir, f"{component_name}_{base_name}.png")
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         
-        # 【极其重要】多进程必须彻底关闭 fig 释放内存
+        # 【极其重要】彻底关闭 fig 释放内存
         plt.close(fig) 
         return True
     
@@ -67,11 +66,11 @@ def plot_field_component(data, component_name, base_name, time_fs):
         return False
 
 # ==========================================
-# 3. 单个文件的任务包装函数 (分发给各核心)
+# 3. 单个文件的处理逻辑
 # ==========================================
 def process_single_file(fname):
     """
-    一个核心负责处理一个完整的 SDF 文件
+    处理一个完整的 SDF 文件
     """
     try:
         data = sh.getdata(fname, verbose=False)
@@ -93,26 +92,21 @@ def process_single_file(fname):
         return f"❌ [{fname}] 处理失败: {str(e)}"
 
 # ==========================================
-# 4. 多进程主控中心
+# 4. 主程序 (单核串行版)
 # ==========================================
 def main():
-    # 提前在主进程建好所有需要的文件夹
+    # 提前建好所有需要的文件夹
     for comp in COMPONENTS_TO_PLOT:
         os.makedirs(f"Plots_{comp}", exist_ok=True)
         
     sdf_files = sorted(glob.glob("*.sdf"))
     total_files = len(sdf_files)
     
-    print(f"🚀 开始并行处理 {total_files} 个文件...")
+    print(f"🚀 开始单核串行处理 {total_files} 个文件...")
     
-    NUM_PROCESSES = 8 
-    print(f"⚙️  正在启动 {NUM_PROCESSES} 个并行进程池...")
-
-    # 启动 8 核进程池
-    with Pool(processes=NUM_PROCESSES) as pool:
-        # pool.imap 会自动把文件列表分发给 8 个进程，并按原顺序回收打印结果
-        for result_msg in pool.imap(process_single_file, sdf_files):
-            print(result_msg)
+    for fname in sdf_files:
+        result_msg = process_single_file(fname)
+        print(result_msg)
 
     print("\n🎉 任务全部完成！")
 

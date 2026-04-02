@@ -2,8 +2,8 @@
 #SBATCH -J plot
 #SBATCH -N 1
 #SBATCH -n 1
-#SBATCH -t 01:00:00           # 视频编码较慢，建议多给点时间
-#SBATCH --mem=4G              # 内存多给一点，防止大数组崩溃
+#SBATCH -t 24:00:00           
+#SBATCH --mem=4G              
 #SBATCH -o list_out.txt
 #SBATCH -e list_err.txt
 

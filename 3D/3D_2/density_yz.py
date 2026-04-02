@@ -7,7 +7,6 @@ import scipy.constants as const
 import numpy as np
 import glob
 import os
-from multiprocessing import Pool
 from scipy.interpolate import RegularGridInterpolator
 
 # ==========================================
@@ -42,7 +41,7 @@ Y_PRIME_LIMITS = [-8, 8]  # 沿着靶面方向 (Y'轴) 的视野
 Z_LIMITS = [-6, 6]        # 沿着 Z 轴的视野
 
 # ==========================================
-# 3. 核心绘图函数 (完全重写)
+# 3. 核心绘图函数
 # ==========================================
 def plot_tilted_yz(data, species_name, cmap, vrange, base_name, time_fs):
     full_var_name = f"Derived_Number_Density_{species_name}"
@@ -69,8 +68,6 @@ def plot_tilted_yz(data, species_name, cmap, vrange, base_name, time_fs):
         YP, Z_mesh = np.meshgrid(yp_coords, z_coords)
         
         # 4. 坐标逆变换：将 (Y', Z) 映射回真实的全局 (X, Y, Z)
-        # X = X_pivot + Depth * cos(θ) - Y' * sin(θ)
-        # Y = Y_pivot + Depth * sin(θ) + Y' * cos(θ)
         X_global = X_PIVOT_UM + SLICE_DEPTH_UM * np.cos(THETA_RAD) - YP * np.sin(THETA_RAD)
         Y_global = Y_PIVOT_UM + SLICE_DEPTH_UM * np.sin(THETA_RAD) + YP * np.cos(THETA_RAD)
         Z_global = Z_mesh
@@ -86,7 +83,7 @@ def plot_tilted_yz(data, species_name, cmap, vrange, base_name, time_fs):
         im = plt.pcolormesh(YP, Z_mesh, sliced_data, cmap=cmap, 
                             vmin=vrange[0], vmax=vrange[1], shading='auto')
         
-        # 手动添加 Colorbar (因为抛弃了 sdf_helper.plot2d)
+        # 手动添加 Colorbar 
         cbar = plt.colorbar(im)
         cbar.set_label(f'Density $(n_c)$', fontsize='large')
         
@@ -96,13 +93,13 @@ def plot_tilted_yz(data, species_name, cmap, vrange, base_name, time_fs):
         title_str = f"Tilted YZ Plane (Tilt: {THETA_DEG}°) | {species_name} | $t = {time_fs:.0f} \\, fs$"
         plt.title(title_str, fontsize='large', y=1.03)
         
-        sh.axis_offset() # 依然可以使用神级滤镜！
+        sh.axis_offset() 
         
         # 路径与保存
         output_dir = f"Plots_Tilted_YZ_Density_{species_name}"
         save_path = os.path.join(output_dir, f"TiltedYZ_{species_name}_{base_name}.png")
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        plt.close(fig)
+        plt.close(fig) # 释放内存
         
         return True
     
@@ -110,7 +107,7 @@ def plot_tilted_yz(data, species_name, cmap, vrange, base_name, time_fs):
         return False
 
 # ==========================================
-# 4. 多进程任务分发
+# 4. 单个文件的任务包装函数 
 # ==========================================
 def process_single_file(fname):
     try:
@@ -133,23 +130,27 @@ def process_single_file(fname):
         return f"❌ [{fname}] 处理失败: {str(e)}"
 
 # ==========================================
-# 5. 主程序启动
+# 5. 主程序启动 (极其安稳的单核串行)
 # ==========================================
 def main():
     for species in SPECIES_MAP.keys():
         os.makedirs(f"Plots_Tilted_YZ_Density_{species}", exist_ok=True)
         
     sdf_files = sorted(glob.glob("*.sdf"))
-    print(f"🚀 [倾斜 YZ 平面] 开始 8核并行 处理 {len(sdf_files)} 个文件...")
-
-    NUM_PROCESSES = 8
+    
+    if not sdf_files:
+        print("❌ 未找到任何 .sdf 文件，请检查目录。")
+        return
+        
+    print(f"🚀 [倾斜 YZ 平面] 开始 单核串行 处理 {len(sdf_files)} 个文件...")
     print(f"⚙️ 目标倾角: {THETA_DEG} 度 | 切片深度 (X'): {SLICE_DEPTH_UM} um")
 
-    with Pool(processes=NUM_PROCESSES) as pool:
-        for result_msg in pool.imap(process_single_file, sdf_files):
-            print(result_msg)
+    # 替换并发池，改为最基础稳定的循环
+    for fname in sdf_files:
+        result_msg = process_single_file(fname)
+        print(result_msg)
 
-    print("🎉 倾斜 YZ 切面图批量导出完成！")
+    print("🎉 倾斜 YZ 切面图单核批量导出完成！")
 
 if __name__ == "__main__":
     main()

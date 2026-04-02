@@ -2,8 +2,8 @@
 #SBATCH -J plot
 #SBATCH -N 1
 #SBATCH -n 1
-#SBATCH -t 02:00:00           # 视频编码较慢，建议多给点时间
-#SBATCH --mem=8G              # 内存多给一点，防止大数组崩溃
+#SBATCH -t 24:00:00           
+#SBATCH --mem=16G             
 #SBATCH -o x_px_out.txt
 #SBATCH -e x_px_err.txt
 
@@ -13,4 +13,4 @@ module purge  #清空所有模块
 
 echo "running at $(date)"
 python x_px.py
-echo "Production finished at $(date)."
+echo "Finished at $(date)."

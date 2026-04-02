@@ -1,5 +1,5 @@
 import matplotlib
-matplotlib.use('Agg') # 【关键防护】强制使用无头模式，防止多进程画图崩溃
+matplotlib.use('Agg') # 【关键防护】强制使用无头模式
 
 import sdf_helper as sh
 import matplotlib.pyplot as plt
@@ -7,7 +7,6 @@ import scipy.constants as const
 import numpy as np
 import glob
 import os
-from multiprocessing import Pool
 
 # ==========================================
 # 1. 物理参数、独立范围控制与【视野裁切】
@@ -47,7 +46,7 @@ def plot_density_xz(data, species_name, cmap, vrange, base_name, time_fs):
         # 【XZ平面专属】：iy=-1 表示沿Y轴中间切片
         sh.plot2d(density_block, iy=-1, vrange=vrange, title=False)
         
-        plt.title(f"XZ Plane | {species_name} Density | $t = {time_fs:.0f} \\, fs$", fontsize='large', y=1.03)
+        plt.title(f"XZ Plane | {species_name} Density | t = {time_fs:.0f} fs", fontsize='large', y=1.03)
         sh.axis_offset()
 
         # 【核心动作：强行裁切视野】
@@ -67,7 +66,7 @@ def plot_density_xz(data, species_name, cmap, vrange, base_name, time_fs):
         return False
 
 # ==========================================
-# 3. 单个文件的任务包装函数 (分发给各核心)
+# 3. 单个文件的任务包装函数
 # ==========================================
 def process_single_file(fname):
     try:
@@ -90,24 +89,29 @@ def process_single_file(fname):
         return f"❌ [{fname}] 处理失败: {str(e)}"
 
 # ==========================================
-# 4. 多进程主控中心
+# 4. 主程序 (单核串行版)
 # ==========================================
 def main():
-    # 提前建好所有文件夹防止多线程冲突
+    # 提前建好所有文件夹防止冲突
     for species in SPECIES_MAP.keys():
         os.makedirs(f"Plots_XZ_Density_{species}", exist_ok=True)
         
     sdf_files = sorted(glob.glob("*.sdf"))
-    print(f"🚀 [XZ 平面] 开始 8核并行 处理 {len(sdf_files)} 个文件...")
+    total_files = len(sdf_files)
+    
+    if total_files == 0:
+        print("❌ 未找到任何 .sdf 文件，请检查目录。")
+        return
 
-    NUM_PROCESSES = 8
-    print(f"⚙️ 启动 {NUM_PROCESSES} 个并行进程池，视野锁定: X {X_LIMITS}, Z {Z_LIMITS} ...")
+    print(f"🚀 [XZ 平面] 开始 单核串行 处理 {total_files} 个文件...")
+    print(f"⚙️ 视野锁定: X {X_LIMITS}, Z {Z_LIMITS} ...")
 
-    with Pool(processes=NUM_PROCESSES) as pool:
-        for result_msg in pool.imap(process_single_file, sdf_files):
-            print(result_msg)
+    # 替换多进程池，改为最稳固的基础 for 循环
+    for fname in sdf_files:
+        result_msg = process_single_file(fname)
+        print(result_msg)
 
-    print("🎉 XZ 密度图批量裁剪导出完成！")
+    print("🎉 XZ 密度图单核批量裁剪导出完成！")
 
 if __name__ == "__main__":
     main()
