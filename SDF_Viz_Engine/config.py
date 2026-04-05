@@ -18,3 +18,15 @@ B_0 = E_0 / const.c
 # --- 视野裁切 (全局统一取景框) ---
 X_LIMITS = [-3, 5]
 Y_LIMITS = [-4, 4]
+Z_LIMITS = [-4, 4]  # 为 XZ 平面新增的 Z 轴限制
+
+# 倾斜切片参数设定
+THETA_DEG = -10.0          # 靶面倾斜角度
+SLICE_DEPTH_UM = 0.025     # 切片深度
+X_PIVOT_UM = 0.0           # 旋转轴心 X 坐标
+Y_PIVOT_UM = 0.0           # 旋转轴心 Y 坐标
+Y_PRIME_LIMITS = [-8, 8]   # 沿着靶面方向的视野范围
+
+# --- 新增的厚度平均参数 ---
+SLICE_DEPTH_RANGE_UM = [0.0, 0.05]  # 沿 X' 轴积分的起始和结束深度
+SLICE_STEPS = 10                    # 在此厚度内采样多少个切片进行平均 (数值越大越平滑，但计算稍慢)
