@@ -11,7 +11,7 @@ module purge  #清空所有模块
 
 # module load vis
 
-echo "running"
+echo "running at $(date)"
 cd ..
-python SDF_Viz_Engine/main.py -t fields density_xy density_xz density_yz list_vars -f "*.sdf"
-echo "Production finished."
+python SDF_Viz_Engine/main.py -t fields density_xy density_xz density_yz list_vars spectrum phase_space -f "0006.sdf"
+echo "Production finished at $(date)."

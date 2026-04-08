@@ -11,8 +11,8 @@ class DensityXYPlotter(BasePlotter):
     def __init__(self):
         # 设定需要绘制的粒子种类及其对应的颜色和范围
         self.species_map = {
-            'Electron': {'cmap': 'turbo',  'vrange': [0, 200]}, 
-            'Proton':   {'cmap': 'turbo',   'vrange': [0, 30]},  
+            'Electron': {'cmap': 'turbo',  'vrange': [0, 40]}, 
+            'Proton':   {'cmap': 'turbo',   'vrange': [0, 10]},  
         }
 
     def plot(self, data, base_name, time_fs):
@@ -25,10 +25,11 @@ class DensityXYPlotter(BasePlotter):
                 # 获取数据块
                 density_block = getattr(data, full_var_name)
                 
-                # 归一化处理，N_C需要从config中读取
-                density_block.data = density_block.data / config.N_C
-                density_block.units = "n_c"
-                density_block.name = f"Density of {species_name}"
+                # 归一化处理，N_C需要从config中读取,防止多插件联合运行时重复归一化
+                if density_block.units != "n_c":
+                    density_block.data = density_block.data / config.N_C
+                    density_block.units = "n_c"
+                    density_block.name = f"Density of {species_name}"
 
                 # 准备画布
                 fig = plt.figure(figsize=(8, 6))

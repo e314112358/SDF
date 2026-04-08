@@ -11,8 +11,8 @@ class DensityYZPlotter(BasePlotter):
 
     def __init__(self):
         self.species_map = {
-            'Electron': {'cmap': 'turbo',  'vrange': [0, 200]},
-            'Proton':   {'cmap': 'turbo',  'vrange': [0, 30]},
+            'Electron': {'cmap': 'turbo',  'vrange': [0, 40]},
+            'Proton':   {'cmap': 'turbo',  'vrange': [0, 10]},
         }
 
     def plot(self, data, base_name, time_fs):
@@ -39,12 +39,23 @@ class DensityYZPlotter(BasePlotter):
                 y_um = grid[1] * 1e6
                 z_um = grid[2] * 1e6
                 
-                # 归一化密度
-                density_3d = getattr(data, full_var_name).data / config.N_C
+                # 获取数据块
+                density_block = getattr(data, full_var_name)
+                
+                # 【核心修复】：检查状态锁，防止重复除以 N_C
+                if getattr(density_block, 'units', '') != "n_c":
+                    density_block.data = density_block.data / config.N_C
+                    density_block.units = "n_c"
+                    density_block.name = f"Density of {species_name}"
+                
+                # 安全地获取已归一化的 3D 矩阵，供插值器使用
+                density_3d = density_block.data
                 
                 # 构建 3D 空间插值器 (针对当前物种只构建一次，提高效率)
                 interpolator = RegularGridInterpolator((x_um, y_um, z_um), density_3d, 
                                                        bounds_error=False, fill_value=0.0)
+                
+                # ... 下方的网格生成、循环累加和绘图代码保持原样不变 ...
                 
                 # 生成局部画布网格点
                 yp_coords = np.linspace(y_prime_limits[0], y_prime_limits[1], 500)
