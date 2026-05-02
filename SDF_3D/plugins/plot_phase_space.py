@@ -14,8 +14,8 @@ class PhaseSpacePlotter(BasePlotter):
     def __init__(self):
         # 对应变量名中的缩写和正式物种名
         self.species_dict = {
-            'Electron': {'short': 'electron', 'mass': const.m_e},
-            'Proton':   {'short': 'proton',   'mass': const.m_p}
+            'Electron': {'short': 'E', 'mass': const.m_e},
+            'Proton':   {'short': 'P',   'mass': const.m_p}
         }
 
     def plot(self, data, base_name, time_fs):

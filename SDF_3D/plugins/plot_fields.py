@@ -10,7 +10,7 @@ class FieldPlotter(BasePlotter):
 
     def __init__(self):
         # 设定需要绘制的分量
-        self.components = ['Ey', 'Bz']
+        self.components = ['Ey', 'Bz','Ex','Bx','By']
 
     def plot(self, data, base_name, time_fs):
         success_count = 0

@@ -10,8 +10,8 @@ class SpectrumPlotter(BasePlotter):
 
     def __init__(self):
         self.species_dict = {
-            'Electron': 'electron',
-            'Proton': 'proton'
+            'Electron': 'E',
+            'Proton': 'P'
         }
 
     def plot(self, data, base_name, time_fs):
@@ -19,7 +19,7 @@ class SpectrumPlotter(BasePlotter):
         fig = plt.figure(figsize=(8, 6))
         
         for formal_name, short_name in self.species_dict.items():
-            var_name = f"dist_fn_{short_name}_energy_spectrum_{formal_name}"
+            var_name = f"dist_fn_{short_name}_en_spe_{formal_name}"
             
             try:
                 # 1. 获取分布函数数据块 (dN/dE)
