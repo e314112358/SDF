@@ -1,0 +1,41 @@
+# TNSA 实验配置示例
+# 使用方法: python main.py --config tnsa_2024 -t spectrum -f "*.sdf"
+
+name: tnsa_2024
+description: TNSA 靶后鞘场加速实验
+
+# 覆盖激光参数
+laser:
+  wavelength_um: 0.8
+  intensity_W_cm2: 1.0e+21
+
+# 覆盖视野范围
+view:
+  x_limits: [-5, 15]
+  y_limits: [-10, 10]
+  z_limits: [-10, 10]
+
+# 覆盖输出目录
+output:
+  root: /scratch/user/TNSA_2024_Outputs
+
+# 覆盖密度图物种
+density:
+  species:
+    - name: Electron
+      cmap: inferno
+      vrange: [0, 50]
+    - name: Proton
+      cmap: turbo
+      vrange: [0, 15]
+
+# 覆盖 RCF 配置
+rcf:
+  detector_distance_m: 0.03    # 3cm
+  species_name: Proton
+  energy_filters:
+    - [5.0, 10.0]
+    - [10.0, 15.0]
+    - [15.0, 20.0]
+    - [20.0, 30.0]
+    - [30.0, 50.0]

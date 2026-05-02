@@ -1,0 +1,99 @@
+# SDF_3D 默认配置
+# 所有实验配置会覆盖此默认值
+
+name: default
+description: 默认配置
+
+# 激光参数
+laser:
+  wavelength_um: 0.8           # 激光波长 (um)
+  intensity_W_cm2: 4.0e+21     # 峰值强度 (W/cm^2)
+
+# 视野范围 (um)
+view:
+  x_limits: [-8, 22]
+  y_limits: [-7.5, 7.5]
+  z_limits: [-10, 10]
+
+# 输出配置
+output:
+  root: ""                     # 留空则自动使用 ../SDF_Outputs
+  dpi: 300
+  figsize: [8, 6]
+
+# 密度图配置
+density:
+  species:
+    - name: Electron
+      cmap: turbo
+      vrange: [0, 40]
+    - name: Proton
+      cmap: turbo
+      vrange: [0, 10]
+
+# 倾斜切片参数
+tilted_slice:
+  theta_deg: -45.0
+  pivot_um: [0.0, 0.0]
+  y_prime_limits: [-8, 8]
+  depth_range_um: [-0.3, 0.3]
+  steps: 10
+
+# RCF 探测器配置
+rcf:
+  detector_distance_m: 0.05    # 探测器距离 (m), 5cm
+  screen_limit_cm: 4.0         # 屏幕显示半宽 (cm)
+  species_name: Proton
+  var_suffix: subset_sample_Proton
+  bins: 300
+  energy_filters:
+    - [15.0, 20.0]
+    - [20.0, 25.0]
+    - [25.0, 30.0]
+    - [30.0, 35.0]
+    - [35.0, 40.0]
+    - [40.0, 45.0]
+    - [45.0, 50.0]
+    - [50.0, 55.0]
+    - [55.0, 60.0]
+    - [60.0, 65.0]
+    - [65.0, 70.0]
+    - [70.0, 75.0]
+
+# 能量分布图配置
+energy_map:
+  species_name: Proton
+  var_suffix: subset_sample_Proton
+  min_energy_MeV: 0.5
+  vrange: [0, 40]
+  bins: 400
+  x_limits: [-8, 22]
+  y_limits: [-15, 15]
+  z_limits: [-15, 15]
+
+# 能谱图配置
+spectrum:
+  species:
+    - name: Electron
+      var_prefix: E
+    - name: Proton
+      var_prefix: P
+  energy_limits_MeV: [0, 100]
+
+# 相空间配置
+phase_space:
+  species:
+    - name: Electron
+      var_prefix: E
+    - name: Proton
+      var_prefix: P
+
+# 场分量配置
+fields:
+  components: [Ey, Bz, Ex, Bx, By]
+  vrange: [-2, 2]
+  cmap: RdBu
+
+# 变量清单配置
+list_vars:
+  target: last                 # 'last', 'all', 或文件编号如 '0015'

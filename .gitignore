@@ -1,0 +1,29 @@
+# Python 缓存
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 分发/打包
+dist/
+build/
+*.egg-info/
+*.egg
+
+# 虚拟环境
+venv/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 输出文件
+SDF_Outputs/
+*.png
+*.txt
+
+# Slurm 输出
+slurm/out_*.txt
+slurm/err_*.txt

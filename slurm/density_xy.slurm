@@ -4,14 +4,15 @@
 #SBATCH -n 1                  # 核心数
 #SBATCH -t 24:00:00           # 运行时间
 #SBATCH --mem=64G             # 运行内存
-#SBATCH -o out_1.txt
-#SBATCH -e err_1.txt
+#SBATCH -o out_%j.txt
+#SBATCH -e err_%j.txt
 
-module purge  #清空所有模块          
+module purge
 
-# module load vis
+# 可选：指定实验配置
+# CONFIG="--config tnsa_2024"
 
 echo "running at $(date)"
-cd ..
-python SDF_3D/main.py -t spectrum -f "*.sdf"
+cd ../..
+python SDF_3D/main.py -t density_xy -f "*.sdf" $CONFIG
 echo "Production finished at $(date)."
