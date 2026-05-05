@@ -45,11 +45,14 @@ class BaseDensityPlotter(BasePlotter):
         sh.axis_offset()
         
         # 应用视野范围
-        if plane in ('XY', 'YZ'):
+        if plane == 'XY':
             plt.xlim(self.config.view.x_limits)
             plt.ylim(self.config.view.y_limits)
         elif plane == 'XZ':
             plt.xlim(self.config.view.x_limits)
+            plt.ylim(self.config.view.z_limits)
+        elif plane == 'YZ':
+            plt.xlim(self.config.view.y_limits)
             plt.ylim(self.config.view.z_limits)
         
         subdir = f"Plots_{plane}_Density_{species_name}"
