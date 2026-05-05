@@ -29,7 +29,7 @@ class FieldPlotter(BasePlotter):
             iz = field_block.data.shape[2] // 2
             sh.plot2d(field_block, iz=iz, vrange=vrange, title=False)
             
-            plt.title(f"{comp} Component | t = {time_fs:.0f} fs", fontsize='large', y=1.03)
+            plt.title(f"{comp} | t = {time_fs:.0f} fs", fontsize='large', y=1.03)
             sh.axis_offset()
             
             plt.xlim(self.config.view.x_limits)

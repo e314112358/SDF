@@ -3,7 +3,7 @@
 #SBATCH -N 1                  # 节点数   
 #SBATCH -n 1                  # 核心数
 #SBATCH -t 24:00:00           # 运行时间
-#SBATCH --mem=64G             # 运行内存
+#SBATCH --mem=32G             # 运行内存
 #SBATCH -o out_%j.txt
 #SBATCH -e err_%j.txt
 
